@@ -236,5 +236,8 @@ report is being generated for the pushed ref and commit. On success, verify
 that the expected report file exists and print its path to stderr. If the
 runner executable is unavailable, the command fails, or the report is
 missing, print a warning to stderr and allow the push to continue. The hook
-must exit successfully even if report generation fails; report generation
-failures must not block a push.
+is report-only: findings, including Critical findings, must never reject a
+push. Always exit successfully, including when the runner is unavailable,
+report generation fails, or the report is missing. Do not add a blocking mode
+or configurable push gate unless the user explicitly requests it after
+approval from the project leaders.

@@ -44,6 +44,10 @@ report path on success. If the review command fails or does not create the
 expected report, it warns and permits the push to continue. As with other
 local hooks, users can bypass it, so it is a convenience and feedback
 mechanism rather than a centrally enforced check.
+The hook is report-only: findings, including Critical findings, never reject a
+push. It waits for the review command to finish so it can report whether the
+report was generated, but it returns success even if review fails. A blocking
+policy should only be considered after explicit approval from project leaders.
 
 ## Review scope
 
@@ -63,10 +67,12 @@ nothing to review and no report is generated.
 
 ## Review standards
 
-Reviews target PHP applications. The default standards are PSR-1 and PSR-12;
-other PHP-FIG recommendations, such as PSR-4 and PSR-3, apply when relevant to
-the changed code. Project-specific documentation, PHP version constraints,
-and formatter or linter configuration should also be considered. See
+Reviews target PHP applications. PSR-1 provides the baseline naming and file
+rules. PSR-12 is not applied by default, especially in legacy codebases; apply
+it when the project explicitly adopts it or its tooling enforces it. Other
+PHP-FIG recommendations, such as PSR-4 and PSR-3, apply when relevant to the
+changed code. Project-specific documentation, PHP version constraints, and
+formatter or linter configuration should also be considered. See
 [`php-standards.md`](.github/skills/code-review/standards/php-standards.md)
 for review guidance and links to the official specifications.
 

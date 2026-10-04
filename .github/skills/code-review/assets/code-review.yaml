@@ -6,6 +6,10 @@ version: 1.0
 hook: pre-push
 base_branch: main
 
+# Report-only policy: findings or review failures must never reject a push.
+# Do not enable a blocking gate without explicit approval from project leaders.
+push_policy: report_only
+
 # Non-interactive GitHub Copilot CLI command. The hook can be installed even
 # when `copilot` is not available; in that case it warns and lets the push
 # continue without a report. Install/authenticate `copilot` in Git's runtime

@@ -21,27 +21,24 @@ Apply the following PSR-1 rules:
 
 See [PSR-1](https://www.php-fig.org/psr/psr-1/).
 
-### PSR-12: Extended Coding Style Guide
+### PSR-12: Extended Coding Style Guide (not applied by default)
 
-PSR-12 extends and replaces PSR-2 and requires PSR-1. Apply it as the default
-formatting standard, subject to the PHP versions supported by the project.
-Among its key rules:
+PSR-12 extends and replaces PSR-2 and requires PSR-1. It defines a consistent
+format for PHP code, including indentation, line endings, whitespace, imports,
+declarations, and control structures. However, many PHP applications reviewed
+by this skill are legacy projects with established conventions and code that
+does not follow PSR-12.
 
-- Use LF line endings, end PHP-only files with a newline, and omit the closing
-  `?>` tag in PHP-only files.
-- Use four spaces for indentation, no trailing whitespace, and no more than
-  one statement per line.
-- Keep lines within the 120-character soft limit; aim for 80 characters where
-  practical.
-- Use lowercase for PHP keywords and types, including short type names such as
-  `bool` and `int`.
-- Follow the prescribed ordering and spacing for declarations, imports,
-  classes, methods, control structures, and multiline argument lists.
-- Declare visibility for properties and methods; do not use `var` for
-  properties.
+Do not treat PSR-12 as a mandatory project-wide baseline. Apply it when the
+project explicitly adopts it, or when changed code is already governed by a
+PSR-12 configuration such as PHP_CodeSniffer or PHP-CS-Fixer. Otherwise, avoid
+reporting PSR-12-only style differences in legacy code; follow the local
+conventions and focus on correctness, security, reliability, and clear
+violations of standards the project actually adopts.
 
-Do not report syntax or style that depends on PHP features unavailable in the
-project's supported PHP versions as a violation.
+When PSR-12 applies, consider the project's supported PHP versions. Do not
+report syntax or style that depends on PHP features unavailable in those
+versions.
 
 See [PSR-12](https://www.php-fig.org/psr/psr-12/).
 
