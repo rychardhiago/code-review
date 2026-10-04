@@ -5,12 +5,12 @@ function TESTsCOde-Review()
     echo 'Teste';
 }
 
-function TESTsCOde-Review()
+function TESTsCOde-Review-ok()
 {
     echo 'Teste';
 }
 
-function TESTsCOde-Review()
+function TESTsCOde-Review-teste()
 {
     echo 'Teste';
 }
@@ -22,6 +22,6 @@ function TESTsCOdeReview2()
 }
 
     TESTsCOde();
-TESTsCOde();
+TESTsCOde-Teste();
 TESTsCOdeReview2();
 ?>
