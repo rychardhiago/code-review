@@ -1,4 +1,5 @@
-# Copy this file to the reviewed project's root as .code-review.yml.
+# Default configuration. Copy to the reviewed project's root as
+# code-review.yaml and customize its review settings.
 version: 1
 
 # The hook will review the pushed commit against this configured base branch.

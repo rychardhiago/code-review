@@ -20,28 +20,32 @@ A tool to review changes in PHP codebases and generate a `report.md` file.
 On its first run in a project, the skill creates a managed `pre-push` hook if
 one does not already exist and `review_command` is configured. It will not
 overwrite a hook installed by another tool. The hook must be installed
-separately in each local clone. The example configuration is
-[`config.yaml`](.github/skills/code-review/assets/config.yaml); copy it to the
-reviewed project's root as `.code-review.yml` and set `base_branch` to the
-branch against which changes should be reviewed. Set `review_command` to a
-non-interactive command and argument list that runs the review and writes its
-report. The example uses GitHub Copilot CLI in programmatic mode (`copilot
--p`), which must be installed and authenticated locally; replace the command
-list to use another AI runner. The hook supplies the base branch, pushed
-commit SHA, review scope, and report path through environment variables. It
-also sets `CODE_REVIEW_TRIGGER=pre-push`, so the skill can distinguish hook
-runs from direct user invocations. Reports record how the review was started.
-The hook prints a message before review and the report path on success. The
-skill asks for a command if `review_command` is missing. If the review
-command fails or does not create the expected report, it warns and permits
-the push to continue. As with other local hooks, users can bypass it, so it
-is a convenience and feedback mechanism rather than a centrally enforced
-check.
+separately in each local clone. The skill first looks for `code-review.yaml`
+in the reviewed project's root. If it is absent, it uses the bundled default
+[`code-review.yaml`](.github/skills/code-review/assets/code-review.yaml).
+Copy that file to the project's root to customize it. On first invocation,
+the skill adds `/code-review.yaml` to the root `.gitignore` if the rule is
+missing, keeping project-local settings out of version control.
+
+Set `base_branch` to the branch against which changes should be reviewed and
+`review_command` to a non-interactive command and argument list that runs the
+review and writes its report. The example uses GitHub Copilot CLI in
+programmatic mode (`copilot -p`), which must be installed and authenticated
+locally; replace the command list to use another AI runner. The hook supplies
+the base branch, pushed commit SHA, review scope, and report path through
+environment variables. It also sets `CODE_REVIEW_TRIGGER=pre-push`, so the
+skill can distinguish hook runs from direct user invocations. Reports record
+how the review was started. The hook prints a message before review and the
+report path on success. If the review command fails or does not create the
+expected report, it warns and permits the push to continue. As with other
+local hooks, users can bypass it, so it is a convenience and feedback
+mechanism rather than a centrally enforced check.
 
 ## Review scope
 
-Set `review_scope` in `.code-review.yml` to control which lines are reviewed.
-Both modes are limited to files changed by the reviewed commit:
+Set `review_scope` in the project's root `code-review.yaml` to control which
+lines are reviewed. Both modes are limited to files changed by the reviewed
+commit:
 
 - `diff`: review only added or modified lines in the diff, using surrounding
   unchanged code only as context.
@@ -54,8 +58,8 @@ Reviews target PHP applications. The default standards are PSR-1 and PSR-12;
 other PHP-FIG recommendations, such as PSR-4 and PSR-3, apply when relevant to
 the changed code. Project-specific documentation, PHP version constraints,
 and formatter or linter configuration should also be considered. See
-[`CODING_STANDARDS.md`](CODING_STANDARDS.md) for review guidance and links to
-the official specifications.
+[`php-standards.md`](.github/skills/code-review/standards/php-standards.md)
+for review guidance and links to the official specifications.
 
 ## Output
 
