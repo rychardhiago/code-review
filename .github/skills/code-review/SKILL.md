@@ -11,10 +11,11 @@ risks as findings.
 ## Project configuration and report
 
 At the start of every review, look for `code-review.yaml` in the reviewed
-project's root. Read and use it when present. If it is absent, read the
-bundled default at `assets/code-review.yaml`. Do not look for or prefer
-`.code-review.yml`. Keep the bundled default unchanged when project-specific
-settings are needed; copy it to the project root and edit that copy.
+project's root. Read and use it when present. If it is absent, read the bundled
+default at [`./assets/code-review.yaml`](./assets/code-review.yaml). Do not
+look for or prefer `.code-review.yml`. Keep the bundled default unchanged when
+project-specific settings are needed; copy it to the project root and edit
+that copy.
 
 - `base_branch`: the branch to compare against when reviewing a local push.
 - `review_scope`: `diff` or `full_codebase`, defining which lines in changed
@@ -22,6 +23,7 @@ settings are needed; copy it to the project root and edit that copy.
 - `report_path`: destination/path pattern for the generated Markdown report.
 - `review_command`: argument list for a non-interactive review runner.
 - `hook`: the Git hook event intended to invoke the review.
+- `push_policy`: currently only `report_only` is supported; never block pushes.
 - `version`: configuration schema version.
 
 ## Invocation source
@@ -42,9 +44,10 @@ base and review the pushed commit's changes against it. Do not claim to know
 the remote request's target branch unless that information was explicitly
 provided.
 
-Use `assets/report-template.md` for the report structure. Resolve its
-placeholders using the available project and review context. If there are no
-actionable findings, state that explicitly; do not invent findings or metrics.
+Use [`./assets/report-template.md`](./assets/report-template.md) for the report
+structure. Resolve its placeholders using the available project and review
+context. If there are no actionable findings, state that explicitly; do not
+invent findings or metrics.
 
 ## Review scope
 
@@ -97,9 +100,9 @@ must not produce a report. Do not continue with a bad ref or invalid scope.
 
 Find project guidance such as `CONTRIBUTING.md` and coding-standard
 documentation. This skill bundles default PHP guidance in
-`standards/php-standards.md`; read it when applicable. For other projects,
-prefer their own coding standards and configuration, using the bundled
-guidance only when appropriate.
+[`./standards/php-standards.md`](./standards/php-standards.md); read it when
+applicable. For other projects, prefer their own coding standards and
+configuration, using the bundled guidance only when appropriate.
 
 Alongside documented project standards, apply the **smell baseline** below: a
 fixed set of Fowler code smells (_Refactoring_, ch. 3) that can help identify

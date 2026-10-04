@@ -1,6 +1,7 @@
 # Code Review
 
-A tool to review changes in PHP codebases and generate a `report.md` file.
+A tool to review changes in PHP codebases and generate a
+`report-{commit}.md` file.
 
 ## Review inputs
 
@@ -16,6 +17,15 @@ A tool to review changes in PHP codebases and generate a `report.md` file.
 - The configured base branch determines the diff reviewed by the hook. Git
   does not expose the target branch of a future pull/merge request to a local
   hook.
+
+## Using the skill in VS Code
+
+To make the skill available to GitHub Copilot Chat in a project, copy the
+complete `code-review` directory to
+`.github/skills/code-review/` in that project. Open the project folder in VS
+Code and invoke `/code-review` in Chat. This makes the skill and its bundled
+standards, configuration, and report template available to Copilot. It does
+not, by itself, install Copilot CLI or connect the skill to Git pushes.
 
 On its first run in a project, the skill creates a managed `pre-push` hook if
 one does not already exist and `review_command` is configured. Hook creation
@@ -48,6 +58,8 @@ The hook is report-only: findings, including Critical findings, never reject a
 push. It waits for the review command to finish so it can report whether the
 report was generated, but it returns success even if review fails. A blocking
 policy should only be considered after explicit approval from project leaders.
+The bundled configuration declares `push_policy: report_only`; no blocking
+policy is currently implemented or permitted by the skill.
 
 ## Review scope
 
