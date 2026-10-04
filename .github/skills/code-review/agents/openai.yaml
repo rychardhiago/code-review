@@ -1,3 +1,3 @@
 interface:
   display_name: "Code Review"
-  short_description: "Review configured PHP changes and generate a report."
+  short_description: "Review PHP changes and set up the report hook"

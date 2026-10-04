@@ -6,6 +6,7 @@
 |---|---|
 | **Project** | {PROJECT_NAME} |
 | **Reviewed change** | {PULL_REQUEST_MERGE_REQUEST_OR_COMMIT} |
+| **Invoked by** | {USER_INVOCATION_OR_GIT_PRE_PUSH_HOOK} |
 | **Base** | {BASE_REF_OR_COMMIT} |
 | **Head** | {HEAD_REF_OR_COMMIT} |
 | **Date** | {DATE} |

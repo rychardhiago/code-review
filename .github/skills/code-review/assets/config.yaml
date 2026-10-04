@@ -5,9 +5,26 @@ version: 1
 hook: pre-push
 base_branch: main
 
+# Non-interactive GitHub Copilot CLI command. Install and authenticate
+# `copilot` before using the hook. Replace this argv list to use another runner.
+review_command:
+  - copilot
+  - -p
+  - >-
+    Use the code-review skill. This is a pre-push hook invocation. Read the
+    CODE_REVIEW_TRIGGER, CODE_REVIEW_BASE_BRANCH, CODE_REVIEW_HEAD_SHA,
+    CODE_REVIEW_REVIEW_SCOPE, and CODE_REVIEW_REPORT_PATH environment
+    variables. Review the specified commit against the base branch using the
+    configured scope, then write the report to the specified path. Do not
+    modify project source files.
+  - --allow-tool=shell(git:*)
+  - --allow-tool=write
+  - --no-ask-user
+
 # "diff" reviews only added/modified lines; "full_codebase" reviews the
 # complete contents of each changed file, not the entire project.
 review_scope: diff
 
-# Path for the generated Markdown report, relative to the project root.
-report_path: report.md
+# Report filename pattern, relative to the project root. {commit} is replaced
+# by the short hash of the reviewed commit. Defaults to report-{commit}.md.
+report_path: report-{commit}.md

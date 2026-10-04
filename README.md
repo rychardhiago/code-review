@@ -17,15 +17,26 @@ A tool to review changes in PHP codebases and generate a `report.md` file.
   does not expose the target branch of a future pull/merge request to a local
   hook.
 
-The skill provides review instructions; it does not install Git hooks by
-itself. The hook must be installed in each local clone. The example
-configuration is
+On its first run in a project, the skill creates a managed `pre-push` hook if
+one does not already exist and `review_command` is configured. It will not
+overwrite a hook installed by another tool. The hook must be installed
+separately in each local clone. The example configuration is
 [`config.yaml`](.github/skills/code-review/assets/config.yaml); copy it to the
 reviewed project's root as `.code-review.yml` and set `base_branch` to the
-branch against which changes should be reviewed. The hook installer and
-runtime are planned follow-up work. As with other local hooks, users can
-bypass it, so it is a convenience and feedback mechanism rather than a
-centrally enforced check.
+branch against which changes should be reviewed. Set `review_command` to a
+non-interactive command and argument list that runs the review and writes its
+report. The example uses GitHub Copilot CLI in programmatic mode (`copilot
+-p`), which must be installed and authenticated locally; replace the command
+list to use another AI runner. The hook supplies the base branch, pushed
+commit SHA, review scope, and report path through environment variables. It
+also sets `CODE_REVIEW_TRIGGER=pre-push`, so the skill can distinguish hook
+runs from direct user invocations. Reports record how the review was started.
+The hook prints a message before review and the report path on success. The
+skill asks for a command if `review_command` is missing. If the review
+command fails or does not create the expected report, it warns and permits
+the push to continue. As with other local hooks, users can bypass it, so it
+is a convenience and feedback mechanism rather than a centrally enforced
+check.
 
 ## Review scope
 
@@ -48,7 +59,11 @@ the official specifications.
 
 ## Output
 
-The default output is a Markdown report named `report.md`, configurable with
-`report_path`. See the
+The default output is a Markdown report named `report-{commit}.md`, where
+`{commit}` is the reviewed commit's short hash. The filename pattern is
+configurable with `report_path`. See the
 [`report-template.md`](.github/skills/code-review/assets/report-template.md)
-for its structure.
+for its structure. After a successful review started directly by a user, the
+skill asks whether to remove older reports matching
+`report-<7-character-commit-hash>.md`; it preserves the report from the
+current run. Hook-triggered reviews do not prompt for cleanup.
