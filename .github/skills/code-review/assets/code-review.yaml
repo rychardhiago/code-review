@@ -1,6 +1,6 @@
 # Default configuration. Copy to the reviewed project's root as
 # code-review.yaml and customize its review settings.
-version: 1
+version: 1.0
 
 # The hook will review the pushed commit against this configured base branch.
 hook: pre-push

@@ -48,13 +48,18 @@ mechanism rather than a centrally enforced check.
 ## Review scope
 
 Set `review_scope` in the project's root `code-review.yaml` to control which
-lines are reviewed. Both modes are limited to files changed by the reviewed
-commit:
+lines are reviewed. Both modes are limited to files changed in the selected
+comparison (commit or current working-tree state):
 
 - `diff`: review only added or modified lines in the diff, using surrounding
   unchanged code only as context.
 - `full_codebase`: review the complete contents of each changed file, including
   unchanged lines, without scanning unrelated project files.
+
+When no commit is specified for a direct review, the skill compares the
+current branch against `base_branch` and includes staged, unstaged, and
+untracked working-tree changes. If that comparison has no changes, there is
+nothing to review and no report is generated.
 
 ## Review standards
 

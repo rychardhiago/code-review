@@ -66,19 +66,32 @@ reviews those changed lines, while `full_codebase` reviews all lines in
 
 ### 1. Identify the change
 
-Use the base supplied by the user. For local hook reviews, use `base_branch` from the selected configuration.
-If neither is available, ask for the base branch or commit.
+Choose the comparison endpoint in this order:
 
-For a local `pre-push` review, use the pushed local commit SHA supplied to the
-hook as the comparison endpoint. Capture the diff command once:
-`git diff <base-branch>...<pushed-sha>` (three-dot, so the comparison is
-against the merge-base). Also note the commits via
-`git log <base-branch>..<pushed-sha> --oneline`. For other reviews, use the
-user-supplied fixed point and `HEAD`.
+1. For a local `pre-push` review, use the pushed local commit SHA supplied to
+   the hook.
+2. Otherwise, use a commit or fixed point explicitly supplied by the user.
+3. If no commit is identifiable, compare the current branch and tracked
+   working-tree changes against `base_branch` from the selected configuration.
+   Use `HEAD` as the endpoint; combine `git diff <base-branch>...HEAD` (the
+   branch changes since the merge-base) with `git diff HEAD` (staged and
+   unstaged tracked changes). Include untracked files as added files when
+   inspecting the working-tree state.
 
-Before going further, confirm the base and endpoint resolve and the diff is
-non-empty. A bad ref or empty diff should fail here rather than continuing
-with an invalid review scope.
+For local hook reviews, use `base_branch` from the selected configuration.
+For direct reviews, use an explicit base supplied by the user when present;
+otherwise use the configured `base_branch`. If no base is available, ask for
+the base branch or commit.
+
+Validate that the base and endpoint resolve before reviewing. Capture the
+comparison diff once and use it to identify changed files and line ranges.
+When comparing the current state against the base, an empty combined diff
+means the branch and tracked working tree have no changes to review: report
+that there is nothing to review and do not generate a findings report. If the
+current branch is equal to the base but tracked or untracked working-tree
+changes exist, review those changes instead. For an explicitly requested
+commit comparison or hook invocation, an empty diff is also not a review and
+must not produce a report. Do not continue with a bad ref or invalid scope.
 
 ### 2. Identify the standards sources
 
