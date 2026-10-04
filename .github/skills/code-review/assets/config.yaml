@@ -1,0 +1,13 @@
+# Copy this file to the reviewed project's root as .code-review.yml.
+version: 1
+
+# The hook will review the pushed commit against this configured base branch.
+hook: pre-push
+base_branch: main
+
+# "diff" reviews only added/modified lines; "full_codebase" reviews the
+# complete contents of each changed file, not the entire project.
+review_scope: diff
+
+# Path for the generated Markdown report, relative to the project root.
+report_path: report.md
