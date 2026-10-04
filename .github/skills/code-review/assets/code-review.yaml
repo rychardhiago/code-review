@@ -6,8 +6,11 @@ version: 1
 hook: pre-push
 base_branch: main
 
-# Non-interactive GitHub Copilot CLI command. Install and authenticate
-# `copilot` before using the hook. Replace this argv list to use another runner.
+# Non-interactive GitHub Copilot CLI command. The hook can be installed even
+# when `copilot` is not available; in that case it warns and lets the push
+# continue without a report. Install/authenticate `copilot` in Git's runtime
+# environment (which may differ from the assistant's), or replace this argv
+# list with another non-interactive runner.
 review_command:
   - copilot
   - -p

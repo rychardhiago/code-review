@@ -193,10 +193,20 @@ When this skill is invoked for a project, check whether its Git
   to configure it first. It must be a non-interactive command and argument
   list that runs the review and writes the report. Execute the list directly
   without shell interpolation or `eval`; do not join it into a shell command.
-- The example uses GitHub Copilot CLI (`copilot -p`) and requires the CLI to
-  be installed and authenticated in the developer's environment. If it is
-  unavailable, tell the user to install/authenticate it or configure a
-  different runner before installing the hook.
+- Do not make hook installation conditional on the runner being available in
+  the current assistant process. The skill may run in a different environment
+  from Git (for example, Windows versus WSL), so check runner availability in
+  the hook's runtime environment. Install the hook when the command is
+  configured, even if it cannot be found during setup.
+- At runtime, check whether the configured executable is available. If it is
+  missing, print a clear warning naming the executable and explaining that the
+  review was skipped; continue the push successfully. If it is present but
+  fails, or does not produce the expected report, also warn and continue.
+- The bundled example uses GitHub Copilot CLI (`copilot -p`), which must be
+  installed and authenticated in the environment where Git runs for reports
+  to be generated. If it is unavailable there, tell the user to install and
+  authenticate it or configure another runner; do not leave the hook
+  uninstalled solely for that reason.
 
 The managed hook must process every non-deletion ref received on pre-push
 stdin. For each pushed commit, resolve its short hash and report path, then
@@ -210,7 +220,8 @@ export these variables while running `review_command` from the project root:
 
 Before invoking the runner, print to stderr a message that a code review
 report is being generated for the pushed ref and commit. On success, verify
-that the expected report file exists and print its path to stderr. On command
-failure or a missing report, print a warning to stderr and allow the push to
-continue. The hook must exit successfully even if report generation fails;
-report generation failures must not block a push.
+that the expected report file exists and print its path to stderr. If the
+runner executable is unavailable, the command fails, or the report is
+missing, print a warning to stderr and allow the push to continue. The hook
+must exit successfully even if report generation fails; report generation
+failures must not block a push.

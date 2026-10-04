@@ -18,7 +18,11 @@ A tool to review changes in PHP codebases and generate a `report.md` file.
   hook.
 
 On its first run in a project, the skill creates a managed `pre-push` hook if
-one does not already exist and `review_command` is configured. It will not
+one does not already exist and `review_command` is configured. Hook creation
+does not depend on the runner being installed in the assistant's current
+environment, which may differ from the environment where Git runs (for
+example, Windows versus WSL). At push time, if the runner is unavailable, the
+hook warns that review was skipped and allows the push to continue. It will not
 overwrite a hook installed by another tool. The hook must be installed
 separately in each local clone. The skill first looks for `code-review.yaml`
 in the reviewed project's root. If it is absent, it uses the bundled default
