@@ -67,3 +67,8 @@ for its structure. After a successful review started directly by a user, the
 skill asks whether to remove older reports matching
 `report-<7-character-commit-hash>.md`; it preserves the report from the
 current run. Hook-triggered reviews do not prompt for cleanup.
+
+On its first invocation in a project, the skill adds a specific pattern for
+generated reports to the root `.gitignore` (for the default location:
+`/report-???????.md`). It preserves existing ignore rules and avoids duplicate
+entries.
