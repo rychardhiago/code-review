@@ -23,5 +23,8 @@ function TESTsCOdeReview2()
 
     TESTsCOde();
 TESTsCOde-Teste();
+TESTsCOde-Teste2();
 TESTsCOdeReview2();
+
+function();
 ?>
