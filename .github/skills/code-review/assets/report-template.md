@@ -1,33 +1,48 @@
-# Code Review Report
+# Code Review Report #{COMMIT}
 
-## Review Information
+<table>
+<tr>
+<td width="50%" valign="top">
 
-| Field | Value |
-|---|---|
-| **Project** | {PROJECT_NAME} |
-| **Reviewed change** | {PULL_REQUEST_MERGE_REQUEST_OR_COMMIT} |
-| **Invoked by** | {USER_INVOCATION_OR_GIT_PRE_PUSH_HOOK} |
-| **Base** | {BASE_REF_OR_COMMIT} |
-| **Head** | {HEAD_REF_OR_COMMIT} |
-| **Date** | {DATE} |
-| **Standards considered** | {APPLICABLE_STANDARDS} |
+<h2>Review Information</h2>
 
-## Summary
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td><strong>Project</strong></td><td>{PROJECT_NAME}</td></tr>
+<tr><td><strong>Reviewed change</strong></td><td>{PULL_REQUEST_MERGE_REQUEST_OR_COMMIT}</td></tr>
+<tr><td><strong>Invoked by</strong></td><td>{USER_INVOCATION_OR_GIT_PRE_PUSH_HOOK}</td></tr>
+<tr><td><strong>Base</strong></td><td>{BASE_REF_OR_COMMIT}</td></tr>
+<tr><td><strong>Head</strong></td><td>{HEAD_REF_OR_COMMIT}</td></tr>
+<tr><td><strong>Date</strong></td><td>{DATE}</td></tr>
+<tr><td><strong>Standards considered</strong></td><td>{APPLICABLE_STANDARDS}</td></tr>
+</table>
 
-{BRIEF_SUMMARY_OF_THE_CHANGE_AND_OVERALL_REVIEW_RESULT}
+</td>
+<td width="50%" valign="top">
 
-| Severity | Findings |
-|---|---:|
-| **Critical** | {CRITICAL_COUNT} |
-| **High** | {HIGH_COUNT} |
-| **Medium** | {MEDIUM_COUNT} |
-| **Low** | {LOW_COUNT} |
+<h2>Summary</h2>
+
+<p>{BRIEF_SUMMARY_OF_THE_CHANGE_AND_OVERALL_REVIEW_RESULT}</p>
+
+<table>
+<tr><th>Severity</th><th>Findings</th></tr>
+<tr><td><strong>Critical</strong></td><td>{CRITICAL_COUNT}</td></tr>
+<tr><td><strong>High</strong></td><td>{HIGH_COUNT}</td></tr>
+<tr><td><strong>Medium</strong></td><td>{MEDIUM_COUNT}</td></tr>
+<tr><td><strong>Low</strong></td><td>{LOW_COUNT}</td></tr>
+<tr><td><strong>Warning</strong></td><td>{WARNING_COUNT}</td></tr>
+</table>
+
+</td>
+</tr>
+</table>
 
 Use **Critical** for a severe issue with immediate, broad impact; **High** for
 an issue likely to cause significant harm or break important behavior;
 **Medium** for a real issue with limited or conditional impact; and **Low** for
-a minor but actionable issue. Do not report preferences or speculative risks
-as findings.
+a minor but actionable issue. Use **Warning** only when a security control
+needs project-context confirmation and is not yet a confirmed vulnerability.
+Do not report preferences or speculative risks as findings.
 
 ## Findings
 

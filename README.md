@@ -1,6 +1,6 @@
 # Code Review
 
-A tool to review changes in PHP codebases and generate a
+A tool to review changes in PHP and JavaScript codebases and generate a
 `report-{commit}.md` file.
 
 ## Review inputs
@@ -77,16 +77,33 @@ current branch against `base_branch` and includes staged, unstaged, and
 untracked working-tree changes. If that comparison has no changes, there is
 nothing to review and no report is generated.
 
-## Review standards
+## Languages and review standards
 
-Reviews target PHP applications. PSR-1 provides the baseline naming and file
-rules. PSR-12 is not applied by default, especially in legacy codebases; apply
-it when the project explicitly adopts it or its tooling enforces it. Other
-PHP-FIG recommendations, such as PSR-4 and PSR-3, apply when relevant to the
-changed code. Project-specific documentation, PHP version constraints, and
-formatter or linter configuration should also be considered. See
+The skill detects languages in changed files and looks for a matching
+`<language>-standards.md` file in the bundled `standards/` directory. A
+language with a standard is reviewed by default; a language without one is
+skipped. Explicitly disable a language in the selected `code-review.yaml` with
+`languages.<language>.enabled: false`. Adding a new standards file enables
+that language automatically unless disabled in configuration. For
+mixed-language files, standards apply to their corresponding code segments.
+
+PHP uses PSR-1 as the baseline naming and file rules. PSR-12 is not applied by
+default, especially in legacy codebases; apply it when the project explicitly
+adopts it or its tooling enforces it. Other PHP-FIG recommendations, such as
+PSR-4 and PSR-3, apply when relevant to the changed code. Project-specific
+documentation, PHP version constraints, and formatter or linter configuration
+should also be considered. See
 [`php-standards.md`](.github/skills/code-review/standards/php-standards.md)
 for review guidance and links to the official specifications.
+It also defines default PHP security validations and severities. Customize or
+disable those rule IDs per project with `security_validation_overrides` in the
+root `code-review.yaml`; use `Warning` for controls that need confirmation
+from project context rather than a confirmed vulnerability.
+
+For JavaScript, see
+[`javascript-standards.md`](.github/skills/code-review/standards/javascript-standards.md).
+It provides basic compatibility and security checks without assuming a
+specific JavaScript or jQuery version.
 
 ## Output
 

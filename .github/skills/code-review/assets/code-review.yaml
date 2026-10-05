@@ -10,6 +10,11 @@ base_branch: main
 # Do not enable a blocking gate without explicit approval from project leaders.
 push_policy: report_only
 
+# Optional project overrides for security rule IDs in standards/php-standards.md.
+# Values: Critical, High, Medium, Low, Warning, or off. Unlisted rules keep
+# their catalog defaults.
+security_validation_overrides: {}
+
 # Non-interactive GitHub Copilot CLI command. The hook can be installed even
 # when `copilot` is not available; in that case it warns and lets the push
 # continue without a report. Install/authenticate `copilot` in Git's runtime
@@ -28,6 +33,10 @@ review_command:
   - --allow-tool=shell(git:*)
   - --allow-tool=write
   - --no-ask-user
+
+# Languages with a matching standards/<language>-standards.md file are
+# reviewed by default. Set enabled: false to explicitly skip a language.
+languages: {}
 
 # "diff" reviews only added/modified lines; "full_codebase" reviews the
 # complete contents of each changed file, not the entire project.

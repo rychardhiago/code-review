@@ -1,12 +1,12 @@
 ---
 name: code-review
-description: "Review PHP changes, generate a commit-specific report, and set up the configured Git pre-push hook on first use."
+description: "Review PHP and JavaScript changes, generate a commit-specific report, and set up the configured Git pre-push hook on first use."
 ---
 
-Review PHP changes for actionable defects and applicable coding-standard
-violations, then generate a Markdown report. Focus on correctness, security,
-reliability, and project standards. Do not report preferences or speculative
-risks as findings.
+Review enabled languages in changed files for actionable defects and
+applicable coding-standard violations, then generate a Markdown report. Focus
+on correctness, security, reliability, and project standards. Do not report
+preferences or speculative risks as findings.
 
 ## Project configuration and report
 
@@ -20,10 +20,14 @@ that copy.
 - `base_branch`: the branch to compare against when reviewing a local push.
 - `review_scope`: `diff` or `full_codebase`, defining which lines in changed
   files are in scope.
+- `languages`: optional per-language `enabled` flags. Set `false` explicitly
+  to skip a language; otherwise, an available standard enables its review.
 - `report_path`: destination/path pattern for the generated Markdown report.
 - `review_command`: argument list for a non-interactive review runner.
 - `hook`: the Git hook event intended to invoke the review.
 - `push_policy`: currently only `report_only` is supported; never block pushes.
+- `security_validation_overrides`: optional severity or `off` overrides for
+  security rule IDs in `standards/php-standards.md`.
 - `version`: configuration schema version.
 
 ## Invocation source
@@ -65,6 +69,29 @@ For example, if a change modifies lines 10-20 in `src/Example.php`, `diff`
 reviews those changed lines, while `full_codebase` reviews all lines in
 `src/Example.php`. Keep finding locations precise and tied to changed files.
 
+## Language detection and selection
+
+Identify languages in changed files from their extensions and inspect
+mixed-language files for embedded languages, such as JavaScript in HTML or
+PHP templates. For each detected language, look for a matching
+`<language>-standards.md` file in `standards/` (for example,
+`javascript-standards.md`). If no standard exists, skip review of that
+language. Do not infer support merely from a configuration entry.
+
+After finding a standard, check `languages.<language>.enabled` in the selected
+configuration. Skip the language only when this value is explicitly `false`;
+otherwise review it using the standard. Adding a standard file therefore
+enables review by default. A project-root `code-review.yaml`, when present, is
+the selected configuration; use the bundled default only when the root file
+does not exist. For mixed-language files, apply enabled standards only to
+their corresponding code segments and review cross-language interactions when
+they are in scope.
+
+Bundled standards:
+
+- PHP: [`./standards/php-standards.md`](./standards/php-standards.md)
+- JavaScript: [`./standards/javascript-standards.md`](./standards/javascript-standards.md)
+
 ## Process
 
 ### 1. Identify the change
@@ -99,10 +126,9 @@ must not produce a report. Do not continue with a bad ref or invalid scope.
 ### 2. Identify the standards sources
 
 Find project guidance such as `CONTRIBUTING.md` and coding-standard
-documentation. This skill bundles default PHP guidance in
-[`./standards/php-standards.md`](./standards/php-standards.md); read it when
-applicable. For other projects, prefer their own coding standards and
-configuration, using the bundled guidance only when appropriate.
+documentation. Read the bundled standards for each enabled language present
+in changed files. For other projects, prefer their own coding standards and
+configuration, using bundled guidance only when appropriate.
 
 Alongside documented project standards, apply the **smell baseline** below: a
 fixed set of Fowler code smells (_Refactoring_, ch. 3) that can help identify
@@ -137,7 +163,15 @@ supports it. Distinguish definite violations from design heuristics, and skip
 issues already enforced by project tooling unless the change introduces a
 behavioral defect.
 
-Generate one report using `assets/report-template.md`. Name it
+Apply the configurable PHP security validation catalog in
+[`./standards/php-standards.md`](./standards/php-standards.md), honoring any
+`security_validation_overrides` in the selected configuration. Treat defaults
+as review guidance, not proof of vulnerability; confirm applicable context and
+existing controls before reporting. Apply the JavaScript security guidance in
+its standards document when JavaScript review is enabled.
+
+Generate one report using `assets/report-template.md`. Set `{COMMIT}` in its
+heading to the short hash of the reviewed head commit. Name the file
 `report-{commit}.md`, where `{commit}` is the short hash of the reviewed commit
 (7 characters by default). For a review containing multiple commits, use the
 short hash of the reviewed head commit. If the selected configuration sets

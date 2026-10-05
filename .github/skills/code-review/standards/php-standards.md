@@ -42,6 +42,52 @@ versions.
 
 See [PSR-12](https://www.php-fig.org/psr/psr-12/).
 
+## Configurable security validations
+
+Use the catalog below as default security checks during reviews. Apply a check
+only when its condition is supported by the changed code and available
+context; do not infer that a route or form is sensitive without evidence.
+Projects may override a rule's severity or disable it in the root
+`code-review.yaml` using `security_validation_overrides`. Keys are rule IDs;
+values are `Critical`, `High`, `Medium`, `Low`, `Warning`, or `off`.
+
+| Rule ID | Validation | Default severity |
+|---|---|---|
+| `form-csrf` | State-changing forms or endpoints authenticated with browser cookies must validate a CSRF token or equivalent same-origin protection. Exclude non-browser APIs using appropriate non-cookie authentication. | Medium |
+| `page-authz` | Check that pages and endpoints handling private or privileged data enforce authentication and authorization. Treat an apparently protected page with no visible check as a prompt to verify project middleware/configuration; report as Warning unless the missing control is established. | Warning |
+| `file-path-validation` | File paths influenced by request/user input must be constrained to the intended directory after canonicalization; reject traversal and unauthorized file access. If attacker-controlled paths allow arbitrary sensitive-file read/write or execution, report as Critical. | Critical |
+| `sql-injection` | Bind external values as parameters; do not concatenate untrusted data into SQL. Dynamic identifiers require strict allowlists because placeholders do not bind identifiers. | Critical |
+| `cross-site-scripting` | Escape untrusted output for its actual HTML, attribute, JavaScript, CSS, or URL context; sanitize only when intentionally accepting HTML. | High |
+| `command-injection` | Avoid shell commands with untrusted concatenated input; prefer APIs or argument-vector execution and validate each argument against an allowlist. | Critical |
+| `file-upload` | Validate uploaded file size and content, do not trust the supplied filename/MIME type, store outside executable/public paths where appropriate, and authorize access. | High |
+| `unsafe-deserialization` | Do not deserialize untrusted data into PHP objects; use a safe data format or explicitly restrict allowed classes when compatibility requires it. | Critical |
+| `hardcoded-secret` | Do not add credentials, API keys, or private tokens to source code; load secrets from the project's approved secret mechanism and rotate exposed credentials. | High |
+| `mass-assignment` | Allowlist fields accepted from requests before updating models or records; prevent users from setting ownership, roles, permissions, or other privileged fields. | High |
+
+### Severity and configuration
+
+Use the listed severity as the default, not an automatic finding threshold.
+Confirm reachability, attacker control, impact, and existing protections before
+reporting. Downgrade or omit a finding when validated framework middleware or
+other controls mitigate it. Raise severity only when the demonstrated impact
+justifies it. `Warning` means a security control needs confirmation from
+project context and should not be presented as a confirmed vulnerability
+without that evidence.
+
+To customize a rule for a project, add an override in its root configuration,
+for example:
+
+```yaml
+security_validation_overrides:
+  form-csrf: High
+  page-authz: off
+  file-path-validation: Critical
+```
+
+An absent override keeps the catalog default. Use `off` only when the check is
+not applicable or is intentionally handled by a separately documented
+control; document that rationale in project guidance.
+
 ## Applicable standards
 
 Apply other PSRs when the changed code implements or integrates with the
